@@ -1,0 +1,6 @@
+{# Hiện thông báo tạm thời do flash() trong Python gửi sang (đăng ký thành công, đăng xuất...). #}
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <div class="alert alert-{{ category }}" role="status">{{ message }}</div>
+  {% endfor %}
+{% endwith %}

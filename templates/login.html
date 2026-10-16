@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Đăng nhập - Smart Garden{% endblock %}
+{% block body %}
+<div class="auth">
+  <section class="auth-side">
+    <h1>Theo dõi vườn của bạn từ xa</h1>
+    <p>Xem dữ liệu cảm biến và nhận thông báo khi vườn cần chăm sóc.</p>
+  </section>
+  <section class="auth-form">
+    {# Không ghi action: form gửi về chính URL hiện tại, giữ nguyên ?next=... #}
+    <form method="post">
+      <h2>Đăng nhập</h2>
+      {% include "_flash.html" %}
+      {% if error %}<div class="alert alert-error" role="alert">{{ error }}</div>{% endif %}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <label for="username">Tên đăng nhập</label>
+      <input id="username" name="username" value="{{ username }}" autocomplete="username" required autofocus>
+
+      <label for="password">Mật khẩu</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+      <button class="btn btn-primary">Đăng nhập</button>
+      <p class="meta">Chưa có tài khoản? <a href="{{ url_for('auth.register') }}">Đăng ký</a></p>
+    </form>
+  </section>
+</div>
+{% endblock %}

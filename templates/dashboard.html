@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block title %}Tổng quan - Smart Garden{% endblock %}
+{% block content %}
+<h1>Xin chào, {{ g.user.username }}</h1>
+<p class="meta">Ô viền nét đứt là chỗ trống, sẽ có dữ liệu khi tính năng tương ứng hoàn thành.</p>
+
+<div class="grid">
+  <section class="card slot">
+    <h2>Trạng thái thiết bị</h2>
+    <p>Chưa có thiết bị nào kết nối.</p>
+  </section>
+  <section class="card slot">
+    <h2>Cảm biến</h2>
+    <p>Chưa có dữ liệu. Giá trị mới nhất sẽ hiện ở đây.</p>
+    <a href="{{ url_for('main.sensors') }}">Mở trang cảm biến</a>
+  </section>
+  <section class="card slot">
+    <h2>Biểu đồ lịch sử</h2>
+    <p>Chưa có dữ liệu theo thời gian.</p>
+    <a href="{{ url_for('main.history') }}">Mở trang lịch sử</a>
+  </section>
+  <section class="card slot">
+    <h2>Điều khiển nhanh</h2>
+    <p>Chưa có thiết bị để điều khiển.</p>
+    <a href="{{ url_for('main.control') }}">Mở trang điều khiển</a>
+  </section>
+  <section class="card slot">
+    <h2>Dự đoán</h2>
+    <p>Chưa có mô hình dự đoán.</p>
+    <a href="{{ url_for('main.predict') }}">Mở trang dự đoán</a>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Đăng ký - Smart Garden{% endblock %}
+{% block body %}
+<div class="auth">
+  <section class="auth-side">
+    <h1>Tạo tài khoản cho khu vườn của bạn</h1>
+    <p>Chỉ cần vài bước để bắt đầu theo dõi.</p>
+  </section>
+  <section class="auth-form">
+    <form method="post">
+      <h2>Đăng ký</h2>
+      {% if errors %}
+        <div class="alert alert-error" role="alert">
+          <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+        </div>
+      {% endif %}
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <label for="username">Tên đăng nhập</label>
+      <input id="username" name="username" value="{{ form.username }}" autocomplete="username" required autofocus>
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" value="{{ form.email }}" autocomplete="email" required>
+
+      <label for="password">Mật khẩu (ít nhất 8 ký tự)</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" required>
+
+      <label for="confirm">Nhập lại mật khẩu</label>
+      <input id="confirm" name="confirm" type="password" autocomplete="new-password" required>
+
+      <button class="btn btn-primary">Tạo tài khoản</button>
+      <p class="meta">Đã có tài khoản? <a href="{{ url_for('auth.login') }}">Đăng nhập</a></p>
+    </form>
+  </section>
+</div>
+{% endblock %}

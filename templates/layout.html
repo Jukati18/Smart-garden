@@ -1,0 +1,29 @@
+{# Khung chung cho mọi trang SAU đăng nhập: sidebar + thanh trên + vùng nội dung. #}
+{% extends "base.html" %}
+{% block body %}
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">Smart Garden</div>
+    <nav class="nav" aria-label="Điều hướng chính">
+      {% for item in nav_items %}
+        <a href="{{ url_for(item.endpoint) }}" class="{{ 'active' if request.endpoint == item.endpoint }}">
+          {{ item.label }}{% if not item.ready %}<span class="tag">Sắp có</span>{% endif %}
+        </a>
+      {% endfor %}
+    </nav>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <span>{{ g.user.username }}</span>
+      <form method="post" action="{{ url_for('auth.logout') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-ghost">Đăng xuất</button>
+      </form>
+    </header>
+    <main class="content">
+      {% include "_flash.html" %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+{% endblock %}
