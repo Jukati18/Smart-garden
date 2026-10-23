@@ -4,8 +4,8 @@ Website quản lý vườn thông minh (đồ án Vật lý cho CNTT). Hiện c�
 
 ## Chạy thử
 ```bash
-python -m venv venv
-venv\Scripts\activate        # Windows  (macOS/Linux: source venv/bin/activate)
+python -m venv venv          # Chạy 1 lần tạo môi trường ảo
+venv\Scripts\activate        # Windows  (macOS/Linux: source venv/bin/activate) mỗi lần mở terminal
 pip install -r requirements.txt
 python app.py                # mở http://127.0.0.1:5000
 ```
