@@ -1,4 +1,4 @@
-"""Kết nối SQLite và tạo bảng. Dùng chung cho cả nhóm khi cần thêm bảng mới."""
+"""Kết nối SQLite và tạo bảng"""
 import os
 import sqlite3
 
@@ -9,10 +9,22 @@ CREATE TABLE IF NOT EXISTS users (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     username      TEXT NOT NULL UNIQUE COLLATE NOCASE,  -- 'Admin' và 'admin' coi là một
     email         TEXT NOT NULL UNIQUE COLLATE NOCASE,
-    password_hash TEXT NOT NULL,                        -- KHÔNG BAO GIỜ lưu mật khẩu thô
+    password_hash TEXT NOT NULL,                        -- Không lưu mật khẩu thô
     created_at    TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
--- Bảng dữ liệu cảm biến sẽ thêm ở đây sau (thống nhất với nhóm trước khi tạo).
+
+-- Bảng readings lưu MỌI lần đo của MỌI cảm biến (thiết kế tổng quát).
+CREATE TABLE IF NOT EXISTS readings (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,      --  Mỗi lần đo là 1 dòng riêng, id luôn tăng
+    device_id   TEXT NOT NULL,                          --  Thiết bị gửi (vd "esp32-01")
+    sensor_type TEXT NOT NULL,                          --  Loại cảm biến, KHÔNG hard-code (vd "soil_moisture")
+    value       REAL NOT NULL,                          --  Giá trị đo (số thực)
+    created_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP --  Thời điểm ghi (giờ UTC)
+);
+
+-- index giúp tìm "mới nhất" / "N dòng gần đây" của 1 loại cảm biến mà không quét cả bảng.
+CREATE INDEX IF NOT EXISTS idx_readings_type_time
+    ON readings (sensor_type, created_at);
 """
 
 
