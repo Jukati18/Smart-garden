@@ -1,0 +1,75 @@
+{# Trang Cảm biến thật, kế thừa khung sidebar từ layout.html #}
+{% extends "layout.html" %}
+{% block title %}Cảm biến - Smart Garden{% endblock %}
+{% block content %}
+<h1>Cảm biến</h1>
+<p class="meta">Tự động cập nhật mỗi 5 giây. <span id="last-update"></span></p>
+
+{# TJinja render sẵn lần đầu; JS bên dưới sẽ thay nội dung vùng này mỗi 5 giây #}
+<div class="grid" id="sensor-grid">
+  {% for r in readings %}
+  <section class="card">
+    <h2>{{ r.label }}</h2>
+    <p class="sensor-value">{{ r.value }} <span class="meta">{{ r.unit }}</span></p>
+    <p class="meta">Thiết bị: {{ r.device_id }} · Đo lúc: {{ r.created_at }}</p>
+  </section>
+  {% else %}
+  <p class="meta">Chưa có dữ liệu</p>
+  {% endfor %}
+</div>
+
+{# JavaScript tự làm mới bằng fetch (không reload cả trang) #}
+<script>
+  const API_URL = "{{ url_for('main.api_sensors_latest') }}";
+  const grid = document.getElementById("sensor-grid");
+  const lastUpdate = document.getElementById("last-update");
+
+  // Dựng 1 thẻ bằng createElement + textContent (KHÔNG dùng innerHTML) để chống XSS,
+  // vì sensor_type/device_id đến từ thiết bị bên ngoài, không đáng tin.
+  function makeCard(r) {
+    const card = document.createElement("section");
+    card.className = "card";
+    const title = document.createElement("h2");
+    title.textContent = r.label;
+    const value = document.createElement("p");
+    value.className = "sensor-value";
+    value.textContent = r.value + " ";
+    const unit = document.createElement("span");
+    unit.className = "meta";
+    unit.textContent = r.unit;
+    value.appendChild(unit);
+    const info = document.createElement("p");
+    info.className = "meta";
+    info.textContent = "Thiết bị: " + r.device_id + " · Đo lúc: " + r.created_at;
+    card.append(title, value, info);
+    return card;
+  }
+
+  function render(list) {
+    grid.replaceChildren();                    // xóa các thẻ cũ
+    if (list.length === 0) {                   // chưa có dữ liệu
+      const p = document.createElement("p");
+      p.className = "meta";
+      p.textContent = "Chưa có dữ liệu";
+      grid.appendChild(p);
+      return;
+    }
+    list.forEach(r => grid.appendChild(makeCard(r)));
+  }
+
+  async function refresh() {
+    try {
+      const res = await fetch(API_URL, { headers: { "Accept": "application/json" } });
+      // Hết phiên đăng nhập: server redirect sang /login, fetch tự đi theo -> đưa người dùng về đó
+      if (res.redirected) { window.location.href = res.url; return; }
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      render(await res.json());
+      lastUpdate.textContent = "Cập nhật lúc " + new Date().toLocaleTimeString("vi-VN");
+    } catch (err) {
+      lastUpdate.textContent = "Mất kết nối, đang thử lại...";   // lỗi mạng: lần sau thử tiếp
+    }
+  }
+
+  setInterval(refresh, 5000);   // lặp lại mỗi 5000 ms
+</script>
+{% endblock %}
