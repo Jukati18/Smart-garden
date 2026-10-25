@@ -85,3 +85,6 @@ input { width: 100%; font: inherit; padding: .6rem .75rem; border: 1px solid var
   .auth-side { padding: 1.5rem; }
   .auth-side h1 { font-size: 1.6rem; max-width: none; }
 }
+
+/* Số đo lớn trên thẻ cảm biến, dùng màu rêu có sẵn */
+.sensor-value { font-size: 2rem; font-weight: 800; color: var(--moss); margin: .25rem 0; }
